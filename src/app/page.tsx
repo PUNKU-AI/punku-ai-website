@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import BomberIntro from '../components/BomberIntro';
 
 export default function Home() {
@@ -81,8 +82,8 @@ export default function Home() {
           <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm shadow-md transition-all duration-300">
             <div className="container-custom">
               <div className="flex items-center justify-between py-4">
-                <div className="text-xl font-bold text-primary-900">
-                  <span className="text-primary-500">PUNKU</span>.AI
+                <div>
+                  <Image src="/logo.png" alt="PUNKU.AI Logo" width={120} height={32} />
                 </div>
                 <div className="hidden md:flex items-center gap-6">
                   <a href="#features" className="text-dark-400 hover:text-primary-700 font-medium">Features</a>
@@ -373,7 +374,9 @@ export default function Home() {
             <div className="container-custom">
               <div className="flex flex-col md:flex-row justify-between items-center text-center md:text-left">
                 <div className="mb-6 md:mb-0">
-                  <div className="text-2xl font-bold text-primary-900 mb-2">PUNKU.AI</div>
+                  <div className="mb-2">
+                    <Image src="/logo.png" alt="PUNKU.AI Logo" width={120} height={32} />
+                  </div>
                   <div className="flex gap-6 text-sm justify-center">
                     <a href="#" className="text-dark-400 hover:text-primary-900 transition-colors">Privacy</a>
                     <a href="#" className="text-dark-400 hover:text-primary-900 transition-colors">Terms</a>

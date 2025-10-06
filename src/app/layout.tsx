@@ -13,9 +13,9 @@ export const metadata: Metadata = {
   description: "The visual AI workflow builder that transforms how you create intelligent applications. Drag, drop, and deploy powerful AI agents in minutes, not months.",
   keywords: "AI agents, visual workflow, AI automation, LangFlow, no-code AI, RAG, chatbots",
   icons: {
-    icon: '/favicon.svg',
-    shortcut: '/favicon.svg',
-    apple: '/favicon.svg',
+    icon: '/favicon.png',
+    shortcut: '/favicon.png',
+    apple: '/favicon.png',
   },
   openGraph: {
     title: "PUNKU.AI - Build AI Agents Visually",
