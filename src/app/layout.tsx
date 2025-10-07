@@ -9,17 +9,17 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "PUNKU.AI - Build AI Agents Visually",
-  description: "The visual AI workflow builder that transforms how you create intelligent applications. Drag, drop, and deploy powerful AI agents in minutes, not months.",
-  keywords: "AI agents, visual workflow, AI automation, LangFlow, no-code AI, RAG, chatbots",
+  title: "PUNKU.AI - AI Workers for Tours, Activities & Attractions",
+  description: "AI workers that actually work. Automate bookings, customer service, and operations for your tour business. Pick pre-built workers or describe what you want.",
+  keywords: "AI workers, tour automation, booking automation, tour operators, activities automation, attractions automation, AI for tours",
   icons: {
     icon: '/favicon.png',
     shortcut: '/favicon.png',
     apple: '/favicon.png',
   },
   openGraph: {
-    title: "PUNKU.AI - Build AI Agents Visually",
-    description: "Drag, drop, and deploy powerful AI agents in minutes. The visual workflow builder for intelligent applications.",
+    title: "PUNKU.AI - AI Workers That Actually Work",
+    description: "Automate your tour business with AI workers. Handle bookings, reviews, and operations automatically.",
     type: "website",
     url: "https://punku.ai",
   },
@@ -31,11 +31,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
       <head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
       </head>
-      <body className={`${inter.className} antialiased`}>
+      <body className={`${inter.className} antialiased`} suppressHydrationWarning>
         {children}
       </body>
     </html>
