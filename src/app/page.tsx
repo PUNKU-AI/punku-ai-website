@@ -66,7 +66,7 @@ export default function Home() {
     { q: "What makes PUNKU.AI different from other AI platforms?", a: "PUNKU.AI combines the power of LangFlow with an intuitive visual interface, allowing you to build complex AI workflows without writing code. Our platform supports multiple AI models, has built-in RAG capabilities, and provides real-time collaboration features." },
     { q: "Do I need coding experience to use PUNKU.AI?", a: "No! PUNKU.AI is designed for both technical and non-technical users. Our drag-and-drop interface makes it easy for anyone to create AI agents, while advanced users can extend functionality with custom Python components." },
     { q: "What AI models does PUNKU.AI support?", a: "PUNKU.AI supports all major AI models including OpenAI (GPT-4, GPT-3.5), Anthropic (Claude), Google (PaLM, Gemini), open-source models via HuggingFace, and local models. You can easily switch between models or use multiple models in the same workflow." },
-    { q: "How secure is my data on PUNKU.AI?", a: "Your data security is our top priority. All data is encrypted in transit and at rest. We're SOC 2 compliant and GDPR compliant. You can also self-host PUNKU.AI for complete control over your data." },
+    { q: "How secure is my data on PUNKU.AI?", a: "Your data security is our top priority. All data is encrypted in transit and at rest. We're GDPR compliant. You can also self-host PUNKU.AI for complete control over your data." },
     { q: "What kind of support do you offer?", a: "Free users get community support via Discord and documentation. Pro users receive priority email support with 24-hour response times. Enterprise users get dedicated support, custom training, and a dedicated success manager." }
   ];
 
@@ -155,14 +155,13 @@ export default function Home() {
 
               <div className="text-center mt-16 w-full">
                 <p className="text-dark-400 text-lg font-medium mb-8">
-                  Trusted by <strong>10,000+</strong> developers and companies worldwide
+                  Trusted by <strong>250+</strong> companies worldwide
                 </p>
-                <div className="flex justify-center items-center gap-6 sm:gap-12 flex-wrap opacity-70 hover:opacity-90 transition-opacity">
-                  <img src="/Airbnb_bw.png" alt="Airbnb" className="h-8 sm:h-10 object-contain filter grayscale hover:grayscale-0 transition-all duration-300" />
-                  <img src="/Brex_logo.png" alt="Brex" className="h-8 sm:h-10 object-contain filter grayscale hover:grayscale-0 transition-all duration-300" />
-                  <img src="/Slack_logo.png" alt="Slack" className="h-8 sm:h-10 object-contain filter grayscale hover:grayscale-0 transition-all duration-300" />
-                  <img src="/Stripe.png" alt="Stripe" className="h-8 sm:h-10 object-contain filter grayscale hover:grayscale-0 transition-all duration-300" />
-                  <img src="/Figma-Logo.png" alt="Figma" className="h-8 sm:h-10 object-contain filter grayscale hover:grayscale-0 transition-all duration-300" />
+                <div className="flex items-center justify-center gap-8 md:gap-12 max-w-6xl mx-auto">
+                  <img src="/Cja19P6P5Jf96SWuGwR11nTXU.png" alt="Cja19P6P5Jf96SWuGwR11nTXU" className="h-8 sm:h-12 object-contain filter grayscale hover:grayscale-0 transition-all duration-300" />
+                  <img src="/HoE0dL4GrtDHNeqTo6wTPQYQE.jpeg" alt="HoE0dL4GrtDHNeqTo6wTPQYQE" className="h-8 sm:h-12 object-contain filter grayscale hover:grayscale-0 transition-all duration-300" />
+                  <img src="/appsYouu.png" alt="appsYouu" className="h-8 sm:h-12 object-contain filter grayscale hover:grayscale-0 transition-all duration-300" />
+                  <img src="/ht5WxpLMaKapqYVO7LRZAO4mY40.jpeg" alt="ht5WxpLMaKapqYVO7LRZAO4mY40" className="h-8 sm:h-12 object-contain filter grayscale hover:grayscale-0 transition-all duration-300" />
                 </div>
               </div>
             </div>
@@ -277,7 +276,7 @@ export default function Home() {
                 <div className="card flex flex-col">
                   <h3 className="mb-4">Starter</h3>
                   <div className="mb-6">
-                    <span className="text-4xl font-bold text-primary-900">$99</span>
+                    <span className="text-4xl font-bold text-primary-900">€99</span>
                     <span className="text-dark-400">/month</span>
                   </div>
                   <ul className="space-y-3 mb-8 flex-grow">
@@ -298,7 +297,7 @@ export default function Home() {
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-primary-600 text-white px-4 py-1 rounded-full text-sm font-semibold">Most Popular</div>
                   <h3 className="mb-4">Growth</h3>
                   <div className="mb-6">
-                    <span className="text-4xl font-bold text-primary-900">$299</span>
+                    <span className="text-4xl font-bold text-primary-900">€299</span>
                     <span className="text-dark-400">/month</span>
                   </div>
                   <ul className="space-y-3 mb-8 flex-grow">
@@ -364,7 +363,7 @@ export default function Home() {
               <a href="https://github.com/logspace-ai/langflow" target="_blank" rel="noopener noreferrer" className="btn-primary bg-white text-primary-900 hover:bg-dark-25 inline-block">Start Building Now</a>
               <div className="flex items-center justify-center gap-2 mt-4">
                 <i className="fas fa-shield-halved h-5 w-5 text-white/70"></i>
-                <span className="text-white/70 text-sm">Open Source • SOC 2 Certified • GDPR Compliant</span>
+                <span className="text-white/70 text-sm">Open Source • GDPR Compliant</span>
               </div>
             </div>
           </section>
@@ -384,8 +383,7 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                  <img src="/soc2-badge.svg" alt="SOC 2 Certified" className="h-10 object-contain" />
-                  <img src="/gdpr-badge.svg" alt="GDPR Compliant" className="h-10 object-contain" />
+                  <Image src="/gdpr_compliant-1024x429.png" alt="GDPR Compliant" width={120} height={50} className="object-contain" />
                 </div>
               </div>
               <div className="border-t border-dark-200 mt-8 pt-6 text-center">

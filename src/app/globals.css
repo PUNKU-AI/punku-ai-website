@@ -331,3 +331,13 @@ h3 {
   0%, 49% { opacity: 1; }
   50%, 100% { opacity: 0; }
 }
+
+/* Infinite scroll animation for logo carousel */
+@keyframes infinite-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.animate-infinite-scroll {
+  animation: infinite-scroll 30s linear infinite;
+}

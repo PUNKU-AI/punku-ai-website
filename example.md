@@ -517,7 +517,7 @@ export default function App() {
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-liberty-red text-white px-4 py-1 rounded-full text-sm font-semibold">Most Popular</div>
                 <h3 className="mb-4">Professional</h3>
                 <div className="mb-6">
-                  <span className="text-4xl font-bold text-navy">${isAnnualPricing ? '15' : '19'}</span>
+                  <span className="text-4xl font-bold text-navy">€{isAnnualPricing ? '15' : '19'}</span>
                   <span className="text-gray-600">/month</span>
                 </div>
                 <ul className="space-y-3 mb-8 flex-grow">
@@ -537,7 +537,7 @@ export default function App() {
               <div className="card flex flex-col">
                 <h3 className="mb-4">Team</h3>
                 <div className="mb-6">
-                  <span className="text-4xl font-bold text-navy">${isAnnualPricing ? '39' : '49'}</span>
+                  <span class="text-4xl font-bold text-navy">€{isAnnualPricing ? '39' : '49'}</span>
                   <span className="text-gray-600">/user/month</span>
                 </div>
                 <ul className="space-y-3 mb-8 flex-grow">
