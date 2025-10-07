@@ -6,38 +6,43 @@ import Link from 'next/link';
 
 export default function MetaAgentPage() {
   useEffect(() => {
+    let typedInstance: any = null;
+
     const script = document.createElement('script');
     script.src = 'https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js';
     script.onload = () => {
       // @ts-expect-error - Typed.js is loaded dynamically
       if (window.Typed) {
-        // @ts-expect-error - Typed.js is loaded dynamically
-        const typed = new window.Typed('#meta-agent-input', {
-          strings: [
-            'Send confirmation emails when someone books a tour',
-            'Check weather and notify customers if rain is forecast',
-            'Respond to common questions about tour availability',
-            'Send review requests 2 days after tour completion',
-            'Create a report of all bookings every Monday morning',
-            'Alert me when a tour is almost full'
-          ],
-          typeSpeed: 50,
-          backSpeed: 30,
-          backDelay: 2000,
-          startDelay: 1000,
-          loop: true,
-          attr: 'placeholder',
-          bindInputFocusEvents: true
-        });
-
-        return () => {
-          typed.destroy();
-        };
+        const inputElement = document.querySelector('#meta-agent-input');
+        if (inputElement) {
+          // @ts-expect-error - Typed.js is loaded dynamically
+          typedInstance = new window.Typed('#meta-agent-input', {
+            strings: [
+              'Send confirmation emails when someone books a tour',
+              'Check weather and notify customers if rain is forecast',
+              'Respond to common questions about tour availability',
+              'Send review requests 2 days after tour completion',
+              'Create a report of all bookings every Monday morning',
+              'Alert me when a tour is almost full'
+            ],
+            typeSpeed: 50,
+            backSpeed: 30,
+            backDelay: 2000,
+            startDelay: 500,
+            loop: true,
+            attr: 'placeholder',
+            bindInputFocusEvents: true,
+            showCursor: false
+          });
+        }
       }
     };
     document.head.appendChild(script);
 
     return () => {
+      if (typedInstance) {
+        typedInstance.destroy();
+      }
       if (script.parentNode) {
         script.parentNode.removeChild(script);
       }

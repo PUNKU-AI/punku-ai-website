@@ -562,7 +562,7 @@ export default function Home() {
                   </ul>
                   <p className="flex items-start gap-3 text-green-600 font-semibold">
                     <span className="text-xl">✓</span>
-                    <span>PUNKU.AI: $99/month and our meta-agent is ready 24/7</span>
+                    <span>PUNKU.AI: €99/month and our meta-agent is ready 24/7</span>
                   </p>
                 </div>
 
@@ -584,7 +584,7 @@ export default function Home() {
                   </ul>
                   <p className="flex items-start gap-3 text-green-600 font-semibold">
                     <span className="text-xl">✓</span>
-                    <span>PUNKU.AI: Workers proactively take real actions</span>
+                    <span>PUNKU.AI: Workers proactively take actions</span>
                   </p>
                 </div>
               </div>

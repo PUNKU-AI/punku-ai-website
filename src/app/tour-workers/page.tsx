@@ -29,8 +29,8 @@ export default function TourWorkersPage() {
       workers: [
         { name: "Guide Scheduler", description: "Optimizes guide assignments based on availability and expertise" },
         { name: "Capacity Optimizer", description: "Manages tour capacity and suggests optimal group sizes" },
-        { name: "Waiver Collector", description: "Sends and collects digital waivers before tours" },
-        { name: "Weather Monitor", description: "Tracks weather and proactively notifies guests of changes" }
+        { name: "Revenue Tracker", description: "Monitors daily revenue and sends automated reports with insights" },
+        { name: "Performance Analyzer", description: "Tracks key metrics and identifies optimization opportunities" }
       ]
     },
     {
