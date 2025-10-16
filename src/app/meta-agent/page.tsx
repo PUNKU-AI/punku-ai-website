@@ -389,7 +389,7 @@ export default function MetaAgentPage() {
                   <Link href="#" className="text-dark-400 hover:text-primary-900 transition-colors text-sm">About</Link>
                 </li>
                 <li>
-                  <Link href="#" className="text-dark-400 hover:text-primary-900 transition-colors text-sm">Contact</Link>
+                  <Link href="/contact" className="text-dark-400 hover:text-primary-900 transition-colors text-sm">Contact</Link>
                 </li>
               </ul>
             </div>
