@@ -93,16 +93,6 @@ export default function Home() {
       <section className="pt-32 pb-20">
         <div className="container-custom">
           <div className="max-w-4xl mx-auto text-center">
-            {/* Announcement Banner */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 bg-gradient-to-r from-purple-100 to-pink-100 border border-purple-200">
-              <span className="text-sm font-medium text-primary-900">
-                Introducing GAIA: Phone Agent
-              </span>
-              <svg className="w-4 h-4 text-primary-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </div>
-
             {/* Main Headline */}
             <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight text-primary-900">
               Meet your first AI employee
@@ -122,7 +112,7 @@ export default function Home() {
                   />
 
                   {/* Bottom toolbar */}
-                  <div className="flex w-full items-center justify-between gap-2 border-t border-gray-200 px-3 py-2">
+                  <div className="flex w-full items-center justify-between gap-2 border-t border-transparent px-3 py-2">
                     <div className="flex items-center gap-1">
                       <Button
                         variant="ghost"
