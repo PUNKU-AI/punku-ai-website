@@ -3,22 +3,80 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Globe, MessageSquare, Phone, Target, Video, Linkedin, Bot, Mic } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 export default function Home() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [currentInput, setCurrentInput] = useState('Ask PUNKU to create a ');
+  const [placeholderIndex, setPlaceholderIndex] = useState(0);
+  const [mentionedTools, setMentionedTools] = useState<Array<{name: string, logo: string}>>([]);
+
+  const prefix = 'Ask PUNKU to create a ';
+  const placeholders = [
+    { text: 'customer service chatbot that connects with @Bookingkit and manages my @Gmail inbox', tools: [{name: 'Bookingkit', logo: '/brand-logos/bookingkit.jpeg'}, {name: 'Gmail', logo: '/brand-logos/gmail.svg'}] },
+  ];
+
+  React.useEffect(() => {
+    let currentText = '';
+    let isDeleting = false;
+    let timeout: NodeJS.Timeout;
+
+    const type = () => {
+      const currentPlaceholder = placeholders[placeholderIndex];
+      const fullText = currentPlaceholder.text;
+
+      if (isDeleting) {
+        currentText = fullText.substring(0, currentText.length - 1);
+      } else {
+        currentText = fullText.substring(0, currentText.length + 1);
+      }
+
+      // Always include the prefix
+      const displayText = prefix + currentText;
+      setCurrentInput(displayText);
+
+      // Extract mentioned tools from current text
+      const toolMatches = currentText.match(/@\w+/g) || [];
+      const activeMentions = toolMatches.map(match => {
+        const toolName = match.substring(1); // Remove @
+        const tool = currentPlaceholder.tools.find(t => t.name === toolName);
+        return tool || null;
+      }).filter(Boolean) as Array<{name: string, logo: string}>;
+
+      setMentionedTools(activeMentions);
+
+      let typeSpeed = isDeleting ? 22 : 60; // 25% faster (30 -> 22, 80 -> 60)
+
+      if (!isDeleting && currentText === fullText) {
+        typeSpeed = 2000; // 2 second pause before deleting
+        isDeleting = true;
+      } else if (isDeleting && currentText === '') {
+        isDeleting = false;
+        setPlaceholderIndex((prev) => (prev + 1) % placeholders.length);
+        setMentionedTools([]);
+        typeSpeed = 500; // Wait before typing next
+      }
+
+      timeout = setTimeout(type, typeSpeed);
+    };
+
+    timeout = setTimeout(type, 100);
+
+    return () => clearTimeout(timeout);
+  }, [placeholderIndex]);
 
   // Quick action pills data
   const quickActions = [
-    { icon: '🌐', label: 'Personal website', color: 'bg-blue-50' },
-    { icon: '💬', label: 'Customer Support', color: 'bg-purple-50' },
-    { icon: '📞', label: 'Outbound Sales Calls', color: 'bg-pink-50' },
-    { icon: '🎯', label: 'Lead gen', color: 'bg-yellow-50' },
-    { icon: '📹', label: 'Meeting Recorder', color: 'bg-green-50' },
-    { icon: '🔗', label: 'LinkedIn outreach', color: 'bg-blue-50' },
-    { icon: '🤖', label: 'Support Chatbot', color: 'bg-purple-50' },
+    { icon: Globe, label: 'Personal website', color: 'bg-blue-50' },
+    { icon: MessageSquare, label: 'Customer Support', color: 'bg-purple-50' },
+    { icon: Phone, label: 'Outbound Sales Calls', color: 'bg-pink-50' },
+    { icon: Target, label: 'Lead gen', color: 'bg-yellow-50' },
+    { icon: Video, label: 'Meeting Recorder', color: 'bg-green-50' },
+    { icon: Linkedin, label: 'LinkedIn outreach', color: 'bg-blue-50' },
+    { icon: Bot, label: 'Support Chatbot', color: 'bg-purple-50' },
   ];
 
   // Company logos for social proof
@@ -47,25 +105,13 @@ export default function Home() {
               <Link href="#pricing" className="text-sm font-medium text-primary-900 hover:text-primary-600 transition-colors">
                 Pricing
               </Link>
-              <a href="#integrations" className="text-sm font-medium text-primary-900 hover:text-primary-600 transition-colors">
-                Integrations
-              </a>
               <div className="relative group">
                 <button className="text-sm font-medium text-primary-900 hover:text-primary-600 transition-colors">
                   Resources
                 </button>
               </div>
-            </div>
-
-            <div className="hidden md:flex items-center gap-4">
-              <a href="https://app.punku.ai" className="text-sm font-medium text-primary-900 hover:text-primary-600 transition-colors">
-                Log in
-              </a>
-              <Link href="/contact" className="px-4 py-2 text-sm font-semibold text-primary-900 border-2 border-primary-900 rounded-lg hover:bg-primary-50 transition-all">
-                Talk to sales
-              </Link>
               <a href="https://app.punku.ai" className="px-4 py-2 text-sm font-semibold text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-all">
-                Try for free
+                Get Started
               </a>
             </div>
 
@@ -90,8 +136,14 @@ export default function Home() {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20">
-        <div className="container-custom">
+      <section className="relative pt-32 pb-20 overflow-hidden bg-white">
+        {/* Dot Pattern Background */}
+        <div className="absolute inset-0 opacity-20" style={{
+          backgroundImage: 'radial-gradient(circle, #2563eb 1px, transparent 1px)',
+          backgroundSize: '40px 40px'
+        }}></div>
+
+        <div className="container-custom relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             {/* Main Headline */}
             <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight text-primary-900">
@@ -105,31 +157,84 @@ export default function Home() {
             <div className="max-w-2xl mx-auto mb-8">
               <TooltipProvider>
                 <div className="group/input-group relative flex w-full flex-col items-center rounded-xl border border-gray-300 bg-white shadow-xl transition-shadow focus-within:border-primary-600 focus-within:ring-2 focus-within:ring-primary-600/20">
-                  {/* Textarea */}
-                  <Textarea
-                    placeholder="Ask, search, or make anything..."
-                    className="min-h-16 resize-none border-0 px-3 py-3 text-base shadow-none focus-visible:ring-0 md:text-sm"
-                  />
+                  {/* Textarea with animated placeholder */}
+                  <div className="relative w-full">
+                    <Textarea
+                      className="min-h-20 resize-none border-0 px-4 py-4 text-lg shadow-none focus-visible:ring-0"
+                    />
+                    {currentInput && (
+                      <div className="pointer-events-none absolute left-0 top-0 flex items-start gap-2 px-4 py-4 text-lg text-muted-foreground text-left w-full">
+                        <span className="text-left">
+                          {currentInput.split(/(@\w+)/g).map((part, i) => {
+                            if (part.startsWith('@')) {
+                              const toolName = part.substring(1);
+                              const tool = mentionedTools.find(t => t.name === toolName);
+                              return (
+                                <span
+                                  key={i}
+                                  className="inline-flex items-center gap-1.5 rounded-md bg-blue-100 px-2 py-1 text-primary-600 font-medium"
+                                >
+                                  {tool?.logo && (
+                                    <Image
+                                      src={tool.logo}
+                                      alt={tool.name}
+                                      width={18}
+                                      height={18}
+                                      className="rounded-sm"
+                                    />
+                                  )}
+                                  {part}
+                                </span>
+                              );
+                            }
+                            return <span key={i}>{part}</span>;
+                          })}
+                        </span>
+                      </div>
+                    )}
+                  </div>
 
                   {/* Bottom toolbar */}
-                  <div className="flex w-full items-center justify-between gap-2 border-t border-transparent px-3 py-2">
-                    <div className="flex items-center gap-1">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 gap-1.5 rounded-full hover:bg-gray-100"
-                      >
-                        <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
-                        </svg>
-                        Attach
-                      </Button>
+                  <div className="flex w-full items-center justify-between gap-2 border-t border-transparent px-4 py-3">
+                    <div className="flex items-center gap-2">
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-9 gap-2 rounded-full hover:bg-gray-100 text-base"
+                          >
+                            <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                            </svg>
+                            Attach
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent className="bg-gray-900 text-white">
+                          <p>Attach file</p>
+                        </TooltipContent>
+                      </Tooltip>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="size-9 rounded-full hover:bg-gray-100"
+                            aria-label="Voice input"
+                          >
+                            <Mic className="size-5" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent className="bg-gray-900 text-white">
+                          <p>Voice input</p>
+                        </TooltipContent>
+                      </Tooltip>
                     </div>
                     <Button
-                      className="h-8 gap-2 rounded-full bg-primary-600 px-4 hover:bg-primary-700"
+                      className="h-9 gap-2 rounded-full bg-primary-600 px-5 hover:bg-primary-700 text-base"
                     >
                       Create Agent
-                      <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                       </svg>
                     </Button>
@@ -140,37 +245,27 @@ export default function Home() {
 
             {/* Quick Action Pills */}
             <div className="flex flex-wrap justify-center gap-3 mb-4">
-              {quickActions.slice(0, 4).map((action, idx) => (
-                <button key={idx} className="pill-button">
-                  <span>{action.icon}</span>
-                  <span>{action.label}</span>
-                </button>
-              ))}
+              {quickActions.slice(0, 4).map((action, idx) => {
+                const IconComponent = action.icon;
+                return (
+                  <button key={idx} className="pill-button">
+                    <IconComponent className="w-4 h-4" />
+                    <span>{action.label}</span>
+                  </button>
+                );
+              })}
             </div>
             <div className="flex flex-wrap justify-center gap-3">
-              {quickActions.slice(4).map((action, idx) => (
-                <button key={idx} className="pill-button">
-                  <span>{action.icon}</span>
-                  <span>{action.label}</span>
-                </button>
-              ))}
+              {quickActions.slice(4).map((action, idx) => {
+                const IconComponent = action.icon;
+                return (
+                  <button key={idx} className="pill-button">
+                    <IconComponent className="w-4 h-4" />
+                    <span>{action.label}</span>
+                  </button>
+                );
+              })}
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Social Proof Section */}
-      <section className="py-16 bg-white">
-        <div className="container-custom">
-          <h3 className="text-center text-xl font-semibold mb-12 text-primary-900">
-            Your next hire isn&apos;t human. These teams know.
-          </h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center opacity-60">
-            {companyLogos.map((logo, idx) => (
-              <div key={idx} className="flex items-center justify-center">
-                <span className="text-lg font-bold text-gray-600">{logo}</span>
-              </div>
-            ))}
           </div>
         </div>
       </section>
@@ -178,57 +273,150 @@ export default function Home() {
       {/* How It Works Section */}
       <section className="section-padding">
         <div className="container-custom max-w-6xl mx-auto">
-          <div className="text-center mb-4">
+          <div className="mb-4">
             <span className="text-sm font-semibold uppercase tracking-wide text-primary-600">
               Easy as one, two, three.
             </span>
           </div>
-          <h2 className="text-center mb-16 text-4xl font-bold text-primary-900">
+          <h2 className="mb-16 text-4xl font-bold text-primary-900">
             How it works
           </h2>
 
           <div className="grid md:grid-cols-3 gap-8">
             {/* Step 1 */}
-            <div className="bg-white rounded-2xl p-8 shadow-sm">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center mb-6 text-white font-bold bg-primary-600">
-                1
+            <div className="bg-white rounded-2xl p-3 shadow-sm">
+              <div className="w-full h-48 bg-white rounded-xl mb-4 overflow-hidden flex flex-col border border-gray-200">
+                {/* Chat messages */}
+                <div className="flex-1 p-3 pt-16 pb-1 flex flex-col justify-end gap-1.5 overflow-hidden">
+                  {/* User message */}
+                  <div className="flex justify-end items-start gap-1.5">
+                    <div className="border border-gray-300 bg-white text-gray-800 text-[10px] leading-tight px-2.5 py-1.5 rounded-lg rounded-tr-none max-w-[85%]">
+                      <span>Create a customer service chatbot that connects with </span>
+                      <span className="inline-flex items-center gap-0.5 rounded bg-blue-100 px-1 py-0.5 font-medium text-primary-600">
+                        <Image
+                          src="/brand-logos/bookingkit.jpeg"
+                          alt="Bookingkit"
+                          width={10}
+                          height={10}
+                          className="rounded-sm inline"
+                        />
+                        @Bookingkit
+                      </span>
+                      <span> and manages my </span>
+                      <span className="inline-flex items-center gap-0.5 rounded bg-blue-100 px-1 py-0.5 font-medium text-primary-600">
+                        <Image
+                          src="/brand-logos/gmail.svg"
+                          alt="Gmail"
+                          width={10}
+                          height={10}
+                          className="rounded-sm inline"
+                        />
+                        @Gmail
+                      </span>
+                      <span> inbox</span>
+                    </div>
+                    <div className="w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-3 h-3 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                      </svg>
+                    </div>
+                  </div>
+                  {/* AI response 1 */}
+                  <div className="flex justify-start items-start gap-1.5">
+                    <div className="w-5 h-5 rounded-full flex-shrink-0 overflow-hidden bg-white">
+                      <Image
+                        src="/favicon.png"
+                        alt="PUNKU"
+                        width={20}
+                        height={20}
+                        className="object-cover"
+                      />
+                    </div>
+                    <div className="border-2 border-primary-600 bg-white text-gray-800 text-[10px] leading-tight px-2.5 py-1.5 rounded-lg rounded-tl-none max-w-[85%]">
+                      Perfect! I'll connect to Bookingkit and Gmail.
+                    </div>
+                  </div>
+                  {/* AI question */}
+                  <div className="flex justify-start items-start gap-1.5">
+                    <div className="w-5 h-5 rounded-full flex-shrink-0 overflow-hidden bg-white">
+                      <Image
+                        src="/favicon.png"
+                        alt="PUNKU"
+                        width={20}
+                        height={20}
+                        className="object-cover"
+                      />
+                    </div>
+                    <div className="border-2 border-primary-600 bg-white text-gray-800 text-[10px] leading-tight px-2.5 py-1.5 rounded-lg rounded-tl-none max-w-[85%]">
+                      Should the agent send emails automatically or just draft replies for you to review?
+                    </div>
+                  </div>
+                </div>
+                {/* Chat input at bottom */}
+                <div className="border-t border-white/30 bg-white/50 backdrop-blur-sm p-2 flex items-center gap-1.5">
+                  <input
+                    type="text"
+                    placeholder="Type your response..."
+                    className="flex-1 bg-white border border-gray-200 rounded-md px-2 py-1 text-[9px] placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-primary-600"
+                    disabled
+                  />
+                  <button className="bg-primary-600 text-white rounded-md px-2 py-1 text-[9px] font-medium hover:bg-primary-700 transition-colors">
+                    Send
+                  </button>
+                </div>
               </div>
-              <h3 className="text-xl font-bold mb-4 text-primary-900">
-                Describe your agent
-              </h3>
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm font-bold bg-primary-600 flex-shrink-0">
+                  1
+                </div>
+                <h3 className="text-lg font-bold text-primary-900">
+                  Describe your agent
+                </h3>
+              </div>
               <p className="text-dark-600">
                 Tell PUNKU.AI what you want to automate in plain English. Or choose from 50+ pre-built templates.
               </p>
             </div>
 
             {/* Step 2 */}
-            <div className="bg-white rounded-2xl p-8 shadow-sm">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center mb-6 text-white font-bold bg-primary-600">
-                2
+            <div className="bg-white rounded-2xl p-3 shadow-sm">
+              <div className="w-full h-48 bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl mb-4 p-6 flex items-center justify-center">
+                <div className="grid grid-cols-3 gap-3">
+                  {['📧', '📅', '💬', '📊', '🎥', '📝'].map((icon, idx) => (
+                    <div key={idx} className="w-14 h-14 bg-white rounded-lg flex items-center justify-center text-2xl shadow-sm">
+                      {icon}
+                    </div>
+                  ))}
+                </div>
               </div>
-              <h3 className="text-xl font-bold mb-4 text-primary-900">
-                Connect your apps
-              </h3>
-              <div className="grid grid-cols-3 gap-3 mb-4">
-                {['📧', '📅', '💬', '📊', '🎥', '📝'].map((icon, idx) => (
-                  <div key={idx} className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center text-xl">
-                    {icon}
-                  </div>
-                ))}
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm font-bold bg-primary-600 flex-shrink-0">
+                  2
+                </div>
+                <h3 className="text-lg font-bold text-primary-900">
+                  Connect your apps
+                </h3>
               </div>
-              <p className="text-sm text-primary-600">
+              <p className="text-dark-600">
                 Hundreds of integrations available.
               </p>
             </div>
 
             {/* Step 3 */}
-            <div className="bg-white rounded-2xl p-8 shadow-sm">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center mb-6 text-white font-bold bg-primary-600">
-                3
+            <div className="bg-white rounded-2xl p-3 shadow-sm">
+              <div className="w-full h-48 bg-gradient-to-br from-green-50 to-green-100 rounded-xl mb-4 flex items-center justify-center">
+                <svg className="w-24 h-24 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
               </div>
-              <h3 className="text-xl font-bold mb-4 text-primary-900">
-                Let AI do the work
-              </h3>
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm font-bold bg-primary-600 flex-shrink-0">
+                  3
+                </div>
+                <h3 className="text-lg font-bold text-primary-900">
+                  Let AI do the work
+                </h3>
+              </div>
               <p className="text-dark-600">
                 Give custom instructions to your agent, all in natural language. Your AI worker handles tasks automatically 24/7.
               </p>
@@ -255,277 +443,6 @@ export default function Home() {
           <button className="px-6 py-3 text-sm font-semibold border-2 rounded-lg hover:bg-primary-50 transition-all text-primary-900 border-primary-900">
             Browse all integrations
           </button>
-        </div>
-      </section>
-
-      {/* Use Case: Sales */}
-      <section className="section-padding">
-        <div className="container-custom">
-          <div className="mb-4">
-            <span className="text-sm font-semibold uppercase tracking-wide text-primary-600">
-              Agents for sales
-            </span>
-          </div>
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12">
-            <h2 className="text-4xl font-bold mb-4 md:mb-0 text-primary-900">
-              Close more deals than ever with AI.
-            </h2>
-            <button className="px-6 py-3 text-sm font-semibold rounded-lg text-white hover:opacity-90 transition-all bg-primary-600">
-              Sales templates
-            </button>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-lg transition-shadow">
-              <div className="w-12 h-12 rounded-xl mb-4 flex items-center justify-center text-2xl bg-primary-50">
-                🎯
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-primary-900">
-                Lead Qualifier
-              </h3>
-              <p className="mb-4 text-dark-600">
-                Automatically research and qualify incoming leads before your sales team reaches out.
-              </p>
-              <a href="#" className="text-sm font-semibold text-primary-600">
-                Try it →
-              </a>
-            </div>
-
-            <div className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-lg transition-shadow">
-              <div className="w-12 h-12 rounded-xl mb-4 flex items-center justify-center text-2xl bg-primary-50">
-                🔍
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-primary-900">
-                Lead Generator
-              </h3>
-              <p className="mb-4 text-dark-600">
-                Find leads across 200+ sources including LinkedIn, Instagram, and more.
-              </p>
-              <a href="#" className="text-sm font-semibold text-primary-600">
-                Try it →
-              </a>
-            </div>
-
-            <div className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-lg transition-shadow">
-              <div className="w-12 h-12 rounded-xl mb-4 flex items-center justify-center text-2xl bg-primary-50">
-                ✉️
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-primary-900">
-                Lead Outreach
-              </h3>
-              <p className="mb-4 text-dark-600">
-                Write the perfect personalized outreach message based on prospect research.
-              </p>
-              <a href="#" className="text-sm font-semibold text-primary-600">
-                Try it →
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Use Case: Meetings */}
-      <section className="section-padding bg-white">
-        <div className="container-custom">
-          <div className="mb-4">
-            <span className="text-sm font-semibold uppercase tracking-wide text-primary-600">
-              Agents for your meetings
-            </span>
-          </div>
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12">
-            <h2 className="text-4xl font-bold mb-4 md:mb-0 text-primary-900">
-              The ultimate meeting sidekick.
-            </h2>
-            <button className="px-6 py-3 text-sm font-semibold rounded-lg text-white hover:opacity-90 transition-all bg-primary-600">
-              Meeting templates
-            </button>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-8">
-              <div className="w-12 h-12 rounded-xl mb-4 flex items-center justify-center text-2xl bg-white">
-                📹
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-primary-900">
-                Your second brain in meetings
-              </h3>
-              <p className="mb-4 text-dark-600">
-                Automatically record, transcribe, and summarize all your meetings. Ask questions about past conversations.
-              </p>
-              <a href="#" className="text-sm font-semibold text-primary-600">
-                Try it →
-              </a>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-white rounded-xl p-6">
-                <div className="text-2xl mb-3">🗓️</div>
-                <h4 className="font-bold mb-2 text-primary-900">Meeting Scheduler</h4>
-                <p className="text-sm text-dark-600">No more scheduling back-and-forth</p>
-                <a href="#" className="text-xs font-semibold mt-2 inline-block text-primary-600">Try it →</a>
-              </div>
-              <div className="bg-white rounded-xl p-6">
-                <div className="text-2xl mb-3">💡</div>
-                <h4 className="font-bold mb-2 text-primary-900">Meeting Coach</h4>
-                <p className="text-sm text-dark-600">Get real-time suggestions</p>
-                <a href="#" className="text-xs font-semibold mt-2 inline-block text-primary-600">Try it →</a>
-              </div>
-              <div className="bg-white rounded-xl p-6">
-                <div className="text-2xl mb-3">📊</div>
-                <h4 className="font-bold mb-2 text-primary-900">Daily Digests</h4>
-                <p className="text-sm text-dark-600">Summary of all meetings</p>
-                <a href="#" className="text-xs font-semibold mt-2 inline-block text-primary-600">Try it →</a>
-              </div>
-              <div className="bg-white rounded-xl p-6">
-                <div className="text-2xl mb-3">✉️</div>
-                <h4 className="font-bold mb-2 text-primary-900">Follow-up Email</h4>
-                <p className="text-sm text-dark-600">Auto-draft follow-ups</p>
-                <a href="#" className="text-xs font-semibold mt-2 inline-block text-primary-600">Try it →</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Phone Agents Section */}
-      <section className="section-padding">
-        <div className="container-custom text-center">
-          <h2 className="text-4xl font-bold mb-6 text-primary-900">
-            Your customer&apos;s superhero. Available 24 hours a day.
-          </h2>
-          <div className="grid md:grid-cols-4 gap-6 max-w-6xl mx-auto">
-            {[
-              { title: 'Executive Assistant', emoji: '💼' },
-              { title: 'Customer Support', emoji: '💬' },
-              { title: 'Receptionist', emoji: '📞' },
-              { title: "Int&apos;l Fleet Coordinator", emoji: '🌍', subtitle: 'Expand globally in 50+ languages' }
-            ].map((agent, idx) => (
-              <div key={idx} className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-shadow">
-                <div className="text-4xl mb-4">{agent.emoji}</div>
-                <h3 className="font-bold mb-2 text-primary-900">{agent.title}</h3>
-                {agent.subtitle && (
-                  <p className="text-sm text-dark-600">{agent.subtitle}</p>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Features Grid */}
-      <section className="section-padding bg-white">
-        <div className="container-custom">
-          <h2 className="text-center text-4xl font-bold mb-16 text-primary-900">
-            Everything you need to automate anything.
-          </h2>
-
-          <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            {[
-              { icon: '🔗', title: 'Connect to your systems', desc: 'Integrate with 2,800+ apps and services' },
-              { icon: '🧠', title: 'Model agnostic', desc: 'Choose from top AI models or let PUNKU decide' },
-              { icon: '👤', title: 'Human-in-the-loop', desc: 'Insert yourself at any point in the workflow' },
-              { icon: '🌐', title: 'Embed on your site', desc: 'Add AI agents to your website in minutes' },
-              { icon: '📱', title: 'Mobile app', desc: 'Talk to your agents on the go' },
-              { icon: '⚡', title: 'Agent builder', desc: 'Create agents with simple prompts' },
-              { icon: '🤖', title: 'Autopilot', desc: 'Agents use computers like human employees' },
-              { icon: '👥', title: 'Team Accounts', desc: 'Share agents and workflows across teams' },
-              { icon: '🔄', title: 'Multi-agent systems', desc: 'Agents that work together like a team' },
-            ].map((feature, idx) => (
-              <div key={idx} className="bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow">
-                <div className="text-3xl mb-4">{feature.icon}</div>
-                <h3 className="text-lg font-bold mb-2 text-primary-900">
-                  {feature.title}
-                </h3>
-                <p className="text-sm text-dark-600">
-                  {feature.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Security & Compliance */}
-      <section className="section-padding">
-        <div className="container-custom text-center">
-          <h2 className="text-4xl font-bold mb-6 text-primary-900">
-            Enterprise-grade security and compliance.
-          </h2>
-          <div className="flex flex-wrap justify-center gap-8 mb-8">
-            <div className="flex items-center gap-3 px-6 py-3 bg-white rounded-xl shadow-sm">
-              <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <span className="font-semibold text-primary-900">SOC 2 Compliant</span>
-            </div>
-            <div className="flex items-center gap-3 px-6 py-3 bg-white rounded-xl shadow-sm">
-              <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <span className="font-semibold text-primary-900">GDPR Compliant</span>
-            </div>
-            <div className="flex items-center gap-3 px-6 py-3 bg-white rounded-xl shadow-sm">
-              <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
-                <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
-              </div>
-              <span className="font-semibold text-primary-900">AES-256 encryption</span>
-            </div>
-          </div>
-          <p className="text-dark-600">
-            Data is encrypted both at rest and in transit.
-          </p>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="section-padding bg-white">
-        <div className="container-custom">
-          <h2 className="text-center text-4xl font-bold mb-4 text-primary-900">
-            What teams are saying:
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mt-12">
-            {[
-              {
-                quote: "It&apos;s like hiring a 24/7 ops teammate for a fraction of the cost. PUNKU.AI handles all our booking confirmations automatically.",
-                author: "Ken Aseme",
-                role: "CEO",
-                company: "TourFlow"
-              },
-              {
-                quote: "PUNKU.AI allowed us to scale the unscalable. We&apos;re now handling 3x more customers with the same team size.",
-                author: "Scot Westwater",
-                role: "CEO",
-                company: "Adventure Tours"
-              },
-              {
-                quote: "PUNKU.AI felt like hiring a superhuman overnight. Our response time went from hours to seconds.",
-                author: "Maddie Weber",
-                role: "Business Ops Lead",
-                company: "City Explorer"
-              }
-            ].map((testimonial, idx) => (
-              <div key={idx} className="bg-white border border-gray-200 rounded-2xl p-8 hover:shadow-lg transition-shadow">
-                <p className="text-lg mb-6 italic text-primary-900">
-                  &quot;{testimonial.quote}&quot;
-                </p>
-                <div>
-                  <p className="font-bold text-primary-900">{testimonial.author}</p>
-                  <p className="text-sm text-dark-600">
-                    {testimonial.role}, {testimonial.company}
-                  </p>
-                </div>
-                <a href="#" className="text-sm font-semibold mt-4 inline-block text-primary-600">
-                  Read full story →
-                </a>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
