@@ -6,6 +6,7 @@ import Link from 'next/link';
 
 export default function MetaAgentPage() {
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let typedInstance: any = null;
 
     const script = document.createElement('script');

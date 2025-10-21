@@ -557,7 +557,7 @@ export default function Home() {
                     </li>
                     <li className="flex items-start gap-3 text-red-600">
                       <span className="text-xl">✗</span>
-                      <span>You're forever dependent on them for any changes</span>
+                      <span>You&apos;re forever dependent on them for any changes</span>
                     </li>
                   </ul>
                   <p className="flex items-start gap-3 text-green-600 font-semibold">
@@ -886,7 +886,7 @@ export default function Home() {
                   <h3 className="text-sm font-bold text-primary-900 mb-4">Company</h3>
                   <ul className="space-y-3">
                     <li>
-                      <a href="/" className="text-dark-400 hover:text-primary-900 transition-colors text-sm">Home</a>
+                      <a href="#" className="text-dark-400 hover:text-primary-900 transition-colors text-sm">Home</a>
                     </li>
                     <li>
                       <a href="#" className="text-dark-400 hover:text-primary-900 transition-colors text-sm">About</a>
