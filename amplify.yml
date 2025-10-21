@@ -6,7 +6,11 @@ frontend:
         - npm ci --cache .npm --prefer-offline
     build:
       commands:
+        - echo "Starting Next.js build..."
         - npm run build
+        - echo "Build completed successfully"
+        - echo "Contents of out directory:"
+        - ls -la out/
   artifacts:
     baseDirectory: out
     files:
